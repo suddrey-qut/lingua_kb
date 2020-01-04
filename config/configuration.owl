@@ -1,0 +1,396 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#"
+     xml:base="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:Robot="http://www.semanticweb.org/suddrey/ontologies/2016/5/Robot#"
+     xmlns:Robot1="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#belongs_on -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#belongs_on">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_in -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_in">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_in"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_located -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_located">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_located"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_on -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_on">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_on_directly -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_on_directly">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_on_directly"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_owner -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#has_owner">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_beside -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_beside">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_colored -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_colored">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_in -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_in">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_located -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_located"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_on -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_on">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_on_directly -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#is_on_directly"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#animate-being -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#animate-being"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#ball -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#ball">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#button -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#button">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#closed -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#closed">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#dial -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#dial">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#off -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#off">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#on -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#on">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#open -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#open">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#robot -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#robot">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#animate-being"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#self -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#self">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#animate-being"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#state"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#surface -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#surface"/>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#switch -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#switch">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#table -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#table">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#surface"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#valve -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#valve">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#interactive"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#object"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#agent -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#agent">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#robot"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#self"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#black -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#black">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#blue -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#blue">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#brown -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#brown">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#green -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#green">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#obj0 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#obj0">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#ball"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#red -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#red">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#silver -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#silver">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#surface0 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#surface0">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#table"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#valve_1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#valve_1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#open"/>
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#valve"/>
+        <is_colored rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#red"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#white -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#white">
+        <rdf:type rdf:resource="http://www.semanticweb.org/suddrey/ontologies/2018/1/Robot#color"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.7.2018-12-02T02:23:35Z) https://github.com/owlcs/owlapi -->
+

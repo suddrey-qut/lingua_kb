@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+import sys
+import rospy
+import time
+
+from std_msgs.msg import String
+from _racer import Racer
+from _knowledge_base import KnowledgeBase
+
+from lingua_kb.srv import Ask, AskResponse, Assert, Tell
+
+knowledge_base = None
+
+def assert_cb(req):
+  result = knowledge_base.ask(req.query)
+
+  if not isinstance(result, bool):
+    raise rospy.ServiceException('Attempting to assert a query')
+
+  return result
+
+def ask_cb(req):
+  result = knowledge_base.ask(req.query)
+
+  if isinstance(result, bool):
+    raise rospy.ServiceException('Attempting to query an assertion')
+  
+  response = AskResponse(data=result)
+
+  if not isinstance(response.data, list):
+    response.data = [ response.data ]
+    
+  return response
+
+def tell_cb(req):
+  knowledge_base.tell(req.statement)
+  return True
+
+def main():
+  global knowledge_base
+
+  rospy.init_node('lingua_kb')
+  knowledge_base = KnowledgeBase(rospy.get_param('~configuration', None))
+    
+  with Racer() as engine:
+    knowledge_base.connect()
+    rospy.Service('/kb/ask', Ask, ask_cb)
+    rospy.Service('/kb/assert', Assert, assert_cb)
+
+    rospy.Service('/kb/tell', Tell, tell_cb)
+
+    try:
+      rospy.loginfo('{} started'.format(rospy.get_name()))
+      rospy.spin()
+    finally:
+      knowledge_base.close()
+        
+if __name__ == '__main__':
+  main()
