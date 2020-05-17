@@ -3,27 +3,31 @@ import copy
 import sys
 
 from _connection import Connection
-from _utils import *
+from lingua_pddl.parser import Parser
 
 class KnowledgeBase:
   current_abox = None
   connection = None
 
-  def __init__(self, configuration = None):
+  def __init__(self, configuration = None, debugging=False):
       if not KnowledgeBase.connection:
           KnowledgeBase.connection = Connection('localhost', 8088, 1)
   
       self.abox = None
       self.memory = {}
+      self.debugging = debugging
 
       self.configuration = configuration
       
-  def connect(self, debugging=False):
+  def connect(self):
       
       KnowledgeBase.connection.connect()
 
-      if not debugging:
+      if self.debugging:
         KnowledgeBase.connection.writeline('(logging-on)')
+        KnowledgeBase.connection.flush()
+      else:
+        KnowledgeBase.connection.writeline('(logging-off)')
         KnowledgeBase.connection.flush()
 
       KnowledgeBase.connection.writeline('(|OWLAPI-enableSimplifiedProtocol| :|global|)')
@@ -82,15 +86,15 @@ class KnowledgeBase:
       if statement in self.memory:
           return self.memory[statement]
 
-      if is_negative(statement):
-          return not self.ask(negate(statement))
+      if Parser.is_negative(statement):
+          return not self.ask(Parser.negate(statement))
 
       retrieve_complement = False
 
-      if is_complement(statement):
+      if Parser.is_complement(statement):
           retrieve_complement = True
 
-      terms = logical_split(statement)
+      terms = Parser.logical_split(statement)
 
       if '?' in terms:
           if len(terms) == 2:
@@ -125,14 +129,14 @@ class KnowledgeBase:
   def tell(self, statement):
       self.invalidate()
 
-      if is_negative(statement):
-          terms = logical_split(negate(statement))
+      if Parser.is_negative(statement):
+          terms = Parser.logical_split(Parser.negate(statement))
           if len(terms) == 2:
               self.evaluate('(forget-concept-assertion {0} #!:{1} #!:{2})'.format(self.abox, terms[1], terms[0]))
           else:
               self.evaluate('(forget-role-assertion {0} #!:{1} #!:{2} #!:{3})'.format(self.abox, terms[2], terms[1], terms[0]))
       else:
-          terms = logical_split(statement)
+          terms = Parser.logical_split(statement)
           if len(terms) == 2:
               self.evaluate('(add-concept-assertion {0} #!:{1} #!:{2})'.format(self.abox, terms[1], terms[0]))
           else:

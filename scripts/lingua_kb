@@ -40,7 +40,7 @@ def main():
   global knowledge_base
 
   rospy.init_node('lingua_kb')
-  knowledge_base = KnowledgeBase(rospy.get_param('~configuration', None))
+  knowledge_base = KnowledgeBase(rospy.get_param('~configuration', None), debugging=True)
     
   with Racer() as engine:
     knowledge_base.connect()
