@@ -1,5 +1,6 @@
 <launch>
   <node pkg="lingua_kb" type="lingua_kb" name="lingua_kb" output="screen">
     <param name="configuration" value="$(find lingua_kb)/config/configuration.owl" />
+    <!-- <param name="kb_type" value="racer" /> -->
   </node>
 </launch>

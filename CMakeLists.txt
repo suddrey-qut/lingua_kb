@@ -54,6 +54,7 @@ add_service_files(
   FILES
   Ask.srv
   Assert.srv
+  State.srv
   Tell.srv
 )
 
