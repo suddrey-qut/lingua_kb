@@ -1,0 +1,4 @@
+string type_name
+---
+string[] parents
+string[] children

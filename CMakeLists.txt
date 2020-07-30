@@ -54,6 +54,7 @@ add_service_files(
   FILES
   Ask.srv
   Assert.srv
+  Hierarchy.srv
   State.srv
   Tell.srv
 )
@@ -111,12 +112,12 @@ catkin_package(
 ## Build ##
 ###########
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/ccl")	
-  execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR} && wget -O ccl-1.11.5-linuxx86.tar.gz https://github.com/Clozure/ccl/releases/download/v1.11.5/ccl-1.11.5-linuxx86.tar.gz")
-  execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR} && tar -xvf ccl-1.11.5-linuxx86.tar.gz && rm ccl-1.11.5-linuxx86.tar.gz")
-  execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/ccl && ln -s lx86cl64 ccl")
-  execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/ccl && ./ccl --load /usr/share/cl-quicklisp/quicklisp.lisp --eval '(quicklisp-quickstart:install :path \"./\")' --eval '(ql:quickload \"racer\")' --eval '(quit)'")
-endif(NOT EXISTS "${PROJECT_SOURCE_DIR}/ccl")
+# if(NOT EXISTS "${PROJECT_SOURCE_DIR}/ccl")	
+#   execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR} && wget -O ccl-1.11.5-linuxx86.tar.gz https://github.com/Clozure/ccl/releases/download/v1.11.5/ccl-1.11.5-linuxx86.tar.gz")
+#   execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR} && tar -xvf ccl-1.11.5-linuxx86.tar.gz && rm ccl-1.11.5-linuxx86.tar.gz")
+#   execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/ccl && ln -s lx86cl64 ccl")
+#   execute_process(COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/ccl && ./ccl --load /usr/share/cl-quicklisp/quicklisp.lisp --eval '(quicklisp-quickstart:install :path \"./\")' --eval '(ql:quickload \"racer\")' --eval '(quit)'")
+# endif(NOT EXISTS "${PROJECT_SOURCE_DIR}/ccl")
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations

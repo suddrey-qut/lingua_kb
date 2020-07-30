@@ -6,7 +6,7 @@ import time
 from std_msgs.msg import String
 from _knowledge_base import MongoKB
 
-from lingua_kb.srv import Ask, AskResponse, Assert, State, StateResponse, Tell
+from lingua_kb.srv import Ask, AskResponse, Assert, State, StateResponse, Tell, Hierarchy, HierarchyResponse
 
 knowledge_base = None
 
@@ -38,6 +38,12 @@ def tell_cb(req):
   knowledge_base.tell(req.statement)
   return True
 
+def hierarchy_cb(req):
+  resp = HierarchyResponse()
+  resp.parents = knowledge_base.get_parent_types(req.type_name)
+  resp.children = knowledge_base.get_child_types(req.type_name)
+  return resp
+
 def main():
   global knowledge_base
 
@@ -50,6 +56,7 @@ def main():
   rospy.Service('/kb/assert', Assert, assert_cb)
   rospy.Service('/kb/state', State, state_cb)
   rospy.Service('/kb/tell', Tell, tell_cb)
+  rospy.Service('/kb/types/hierarchy', Hierarchy, hierarchy_cb)
 
   try:
     rospy.loginfo('{} started'.format(rospy.get_name()))

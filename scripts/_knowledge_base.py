@@ -9,13 +9,15 @@ class MongoKB:
   def __init__(self):
       self.client = None
       self.db = None
-      self.collection = None
+      self.objects = None
+      self.types = None
 
   def connect(self):
       self.client = pymongo.MongoClient()
       self.db = self.client.lingua
 
-      self.collection = self.db.objects
+      self.objects = self.db.objects
+      self.types = self.db.types
 
   def prepare(self):
       pass
@@ -35,7 +37,7 @@ class MongoKB:
 
           if terms[1] == '?':
             query['object_id'] = terms[2] if terms[2][0] != '!' else { '$ne': terms[2][1:] }
-            items = self.collection.find(query)
+            items = self.objects.find(query)
 
             for item in items:  
               for attr in item['attributes']:
@@ -46,14 +48,14 @@ class MongoKB:
             
           if terms[2] == '?':
             query['attributes.value'] = terms[1] if terms[1][0] != '!' else { '$ne': terms[1][1:] }
-            items = self.collection.find(query)
+            items = self.objects.find(query)
 
             for item in items:
               result.append(item['object_id'])
             return result
 
       else:
-        return self.collection.count_documents({
+        return self.objects.count_documents({
           'attributes.key': terms[0],
           'attributes.value': terms[1],
           'object_id': terms[2]
@@ -95,13 +97,69 @@ class MongoKB:
 
   def dump(self):
       facts = list()
-      items = self.collection.find({})
+      items = self.objects.find({})
       for item in items:
         for attr in item['attributes']:
           for value in attr['value']:
             facts.append('({} {} {})'.format(attr['key'], value, item['object_id']))
       
       return set(facts)
+
+  def get_parent_types(self, typename):
+    cursor = self.types.aggregate([
+      {'$match': {'typename': typename}}, 
+      {'$graphLookup': {
+        'from': 'types', 
+        'startWith': '$typename', 
+        'connectFromField': 'parent', 
+        'connectToField': 'typename', 
+        'as': 'parents'
+      }}
+    ])
+    
+    result = []
+
+    try:
+      item = next(cursor)
+      for parent in item['parents']:
+        if parent['parent']:
+          result.append(parent['parent'])
+    except StopIteration:
+      pass    
+
+    return list(set(result))
+    
+
+  def get_child_types(self, typename):
+    cursor = self.types.aggregate([
+      {'$match': {'typename': typename}}, 
+      {'$graphLookup': {
+        'from': 'types', 
+        'startWith': '$typename', 
+        'connectFromField': 'typename', 
+        'connectToField': 'parent', 
+        'as': 'children'
+      }}])
+    print([
+      {'$match': {'typename': typename}}, 
+      {'$graphLookup': {
+        'from': 'types', 
+        'startWith': '$typename', 
+        'connectFromField': 'typename', 
+        'connectToField': 'parent', 
+        'as': 'children'
+      }}])
+
+    result = []
+
+    try:
+      item = next(cursor)      
+      for child in item['children']:
+        result.append(child['typename'])
+    except StopIteration:
+      pass
+
+    return list(set(result))
 
   def get_id(self):
     return self.abox
