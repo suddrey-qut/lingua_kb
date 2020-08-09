@@ -1,0 +1,10 @@
+[
+  {
+    "typename": "object"
+  },
+  {
+    "typename": "ball",
+    "parent": "gripper"
+  },
+  
+]

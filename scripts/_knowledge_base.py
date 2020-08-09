@@ -12,6 +12,8 @@ class MongoKB:
       self.objects = None
       self.types = None
 
+      self._handlers = {}
+
   def connect(self):
       self.client = pymongo.MongoClient()
       self.db = self.client.lingua
@@ -31,7 +33,13 @@ class MongoKB:
 
       terms = Parser.logical_split(statement)
       result = []
-            
+
+      handlers = list(filter(lambda pattern: re.match(pattern, statement), self._handlers))
+      
+      if handlers:
+        args = re.findall(handlers[0], statement)
+        return self._handlers[handlers[0]](args[0])
+        
       if '?' in terms:
           query = {'attributes.key': terms[0]}
 
@@ -63,7 +71,6 @@ class MongoKB:
           
 
   def tell(self, statement):
-    print('Inserting statement: {}'.format(statement))
     if Parser.is_negative(statement):
         terms = Parser.logical_split(Parser.negate(statement))
         if len(terms) == 2:
@@ -89,12 +96,6 @@ class MongoKB:
           return None
       return inverse_name[0]
 
-  # def get_concepts(self):
-  #     return list(set(self.process(self.evaluate('(tbox-retrieve (?x ?y) (and (top ?x) (?x ?y has-child)))'))))
-  #
-  # def get_roles(self):
-  #     return list(set(self.process(self.evaluate('(tbox-retrieve (?x ?y) (and (top ?x) (?x ?y has-child)))'))))
-
   def dump(self):
       facts = list()
       items = self.objects.find({})
@@ -104,6 +105,27 @@ class MongoKB:
             facts.append('({} {} {})'.format(attr['key'], value, item['object_id']))
       
       return set(facts)
+
+  def get_types(self):
+    return [item['typename'] for item in self.types.findall({})]
+
+  def clear_types(self):
+    result = self.types.delete_many({})
+    return result.deleted_count
+
+  def add_type(self, typename, parent=None):
+    entry = {
+      'typename': typename, 'parent': 
+      parent if parent is not None else ''
+    }
+    
+    result = self.types.replace_one({ 'typename': typename }, entry, upsert=True)
+    return result.modified_count
+
+  def remove_type(self, typename):
+    children = self.get_child_types(typename)
+    result = self.types.delete_many({ 'typename': { '$in': children + [typename] } })
+    return result.deleted_count
 
   def get_parent_types(self, typename):
     cursor = self.types.aggregate([
@@ -128,7 +150,6 @@ class MongoKB:
       pass    
 
     return list(set(result))
-    
 
   def get_child_types(self, typename):
     cursor = self.types.aggregate([
@@ -140,16 +161,6 @@ class MongoKB:
         'connectToField': 'parent', 
         'as': 'children'
       }}])
-    print([
-      {'$match': {'typename': typename}}, 
-      {'$graphLookup': {
-        'from': 'types', 
-        'startWith': '$typename', 
-        'connectFromField': 'typename', 
-        'connectToField': 'parent', 
-        'as': 'children'
-      }}])
-
     result = []
 
     try:
@@ -161,15 +172,17 @@ class MongoKB:
 
     return list(set(result))
 
-  def get_id(self):
-    return self.abox
+  def add_handler(self, key, callback):
+    self._handlers[key] = callback
 
-  def get_uri(self):
-    return self.evaluate('(get-namespace-prefix {0}|)'.format(re.findall('.*.owl', self.get_id())[0]))[1:-1]
+  def clear_handlers(self):
+    self._handlers = {}
 
-  def get_empty(self):
-    cloned = KnowledgeBase()
-    cloned.abox = self.evaluate('(clone-abox DEFAULT)')
-    KnowledgeBase.current_abox = cloned.abox
-    cloned.prepare()
-    return cloned
+  def remove_handler(self, key):
+    try: 
+      del self._handlers[key]
+    except KeyError:
+      pass
+
+  def get_handlers(self):
+    return self._handlers.keys()

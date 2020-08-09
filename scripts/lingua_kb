@@ -2,67 +2,136 @@
 import sys
 import rospy
 import time
+import json
+import importlib
 
 from std_msgs.msg import String
 from _knowledge_base import MongoKB
 
 from lingua_kb.srv import Ask, AskResponse, Assert, State, StateResponse, Tell, Hierarchy, HierarchyResponse
+from lingua_kb.srv import Clear, Get, GetResponse, Insert, Remove
 
-knowledge_base = None
+class LinguaKB:
+  def __init__(self, knowledge_base=None):
+    self.knowledge_base = knowledge_base if knowledge_base is not None else MongoKB()
 
-def assert_cb(req):
-  result = knowledge_base.ask(req.query)
-
-  if not isinstance(result, bool):
-    raise rospy.ServiceException('Attempting to assert a query')
-
-  return result
-
-def ask_cb(req):
-  result = knowledge_base.ask(req.query)
-
-  if isinstance(result, bool):
-    raise rospy.ServiceException('Attempting to query an assertion')
-  
-  response = AskResponse(data=result)
-
-  if not isinstance(response.data, list):
-    response.data = [ response.data ]
+    handler_file = rospy.get_param('~handlers', '')
     
-  return response
+    with open(handler_file, 'U') as f:
+      handlers = json.loads(f.read())
 
-def state_cb(req):
-  return StateResponse(data=knowledge_base.dump())
+      for handler in handlers:
+        self.insert_handler(handler['pattern'], handler['callback'])
 
-def tell_cb(req):
-  knowledge_base.tell(req.statement)
-  return True
+    self.knowledge_base.connect()
+    
+    rospy.Service('/kb/ask', Ask, self.ask_cb)
+    rospy.Service('/kb/assert', Assert, self.assert_cb)
+    rospy.Service('/kb/state', State, self.state_cb)
+    rospy.Service('/kb/tell', Tell, self.tell_cb)
+    
+    rospy.Service('/kb/types/hierarchy', Hierarchy, self.hierarchy_cb)
 
-def hierarchy_cb(req):
-  resp = HierarchyResponse()
-  resp.parents = knowledge_base.get_parent_types(req.type_name)
-  resp.children = knowledge_base.get_child_types(req.type_name)
-  return resp
+    rospy.Service('/kb/types/get', Get, self.get_types_cb)
+    rospy.Service('/kb/types/clear', Clear, self.clear_types_cb)
+    rospy.Service('/kb/types/insert', Insert, self.insert_type_cb)
+    rospy.Service('/kb/types/remove', Remove, self.remove_type_cb)
+
+    rospy.Service('/kb/handlers/get', Get, self.get_handlers_cb)
+    rospy.Service('/kb/handlers/clear', Clear, self.clear_handlers_cb)
+    rospy.Service('/kb/handlers/insert', Insert, self.insert_handler_cb)
+    rospy.Service('/kb/handlers/remove', Remove, self.remove_handler_cb)
+    
+  def assert_cb(self, req):
+    result = self.knowledge_base.ask(req.query)
+
+    if not isinstance(result, bool):
+      raise rospy.ServiceException('Attempting to assert a query')
+
+    return result
+
+  def ask_cb(self, req):
+    result = self.knowledge_base.ask(req.query)
+
+    if isinstance(result, bool):
+      raise rospy.ServiceException('Attempting to query an assertion')
+    
+    response = AskResponse(data=result)
+
+    if not isinstance(response.data, list):
+      response.data = [ response.data ]
+      
+    return response
+
+  def state_cb(self, req):
+    return StateResponse(data=self.knowledge_base.dump())
+
+  def tell_cb(self, req):
+    self.knowledge_base.tell(req.statement)
+    return True
+
+  def hierarchy_cb(self, req):
+    resp = HierarchyResponse()
+    resp.parents = self.knowledge_base.get_parent_types(req.type_name)
+    resp.children = self.knowledge_base.get_child_types(req.type_name)
+    return resp
+
+  def get_types_cb(self, req):
+    return GetResponse(names=self.knowledge_base.get_types())
+
+  def clear_types_cb(self, req):
+    self.knowledge_base.clear_types()
+    return True
+
+  def insert_type_cb(self, req):
+    self.knowledge_base.add_type(req.name, req.value)
+    return True
+
+  def remove_type_cb(self, req):
+    self.knowledge_base.remove_type(req.name)
+    return True
+
+  def get_handlers_cb(self, req):
+    return GetResponse(names=self.knowledge_base.get_handlers())
+
+  def clear_handlers_cb(self, req):
+    self.knowledge_base.clear_handlers()
+    return True
+
+  def insert_handler_cb(self, req):
+    self.insert_handler(req.name, req.value)
+
+  def remove_handler_cb(self, req):
+    self.knowledge_base.remove_handler(req.name)
+    return True
+
+  def insert_handler(self, key, value):
+    try:
+      package_name, callback_name = value.split('/')
+
+      module = importlib.import_module(package_name)
+      callback = module.__getattribute__(callback_name)
+
+      self.knowledge_base.add_handler(key, callback)
+
+      rospy.loginfo('Registered {} with handler: {}'.format(key, value))
+      return True
+
+    except Exception as e:
+      rospy.logerr(str(e))
+      return False
+
+  def run(self):
+    try:
+      rospy.loginfo('{} started'.format(rospy.get_name()))
+      rospy.spin()
+    finally:
+      self.knowledge_base.close()
 
 def main():
-  global knowledge_base
-
   rospy.init_node('lingua_kb')
-      
-  knowledge_base = MongoKB()
-
-  knowledge_base.connect()
-  rospy.Service('/kb/ask', Ask, ask_cb)
-  rospy.Service('/kb/assert', Assert, assert_cb)
-  rospy.Service('/kb/state', State, state_cb)
-  rospy.Service('/kb/tell', Tell, tell_cb)
-  rospy.Service('/kb/types/hierarchy', Hierarchy, hierarchy_cb)
-
-  try:
-    rospy.loginfo('{} started'.format(rospy.get_name()))
-    rospy.spin()
-  finally:
-    knowledge_base.close()
+  lingua_kb = LinguaKB()
+  lingua_kb.run()
       
 if __name__ == '__main__':
   main()
