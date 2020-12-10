@@ -1,6 +1,7 @@
 import re
 import copy
 import sys
+import json
 import pymongo
 
 from lingua_pddl.parser import Parser
@@ -12,6 +13,8 @@ class MongoKB:
       self.objects = None
       self.types = None
 
+      self._collections = {}
+
       self._handlers = {}
 
   def connect(self):
@@ -20,6 +23,11 @@ class MongoKB:
 
       self.objects = self.db.objects
       self.types = self.db.types
+
+      self._collections = {
+        'types': self.types, 
+        'objects': self.objects
+      }
 
   def prepare(self):
       pass
@@ -186,3 +194,36 @@ class MongoKB:
 
   def get_handlers(self):
     return self._handlers.keys()
+
+  def load(self, collection, filename):
+    try:
+      with open(filename) as f:
+        for item in json.loads(f.read()):
+          self._collections[collection].insert_one(item)
+      return True
+    except FileNotFoundError:
+      return False
+    except KeyError:
+      return False
+
+  def save(self, collection, filename):
+    try:
+      to_save = []
+      for item in self._collections[collection].find({}):
+        del item['_id']
+        to_save.append(item)
+      with open(filename, 'w') as f:
+        f.write(json.dumps(to_save, sort_keys=True, indent=4))
+      return True
+    except FileNotFoundError:
+      return False
+    except KeyError:
+      return False
+    pass
+
+  def clear(self, target=None):
+    if not target:
+      for collection in self._collections:
+        self._collections[collection].delete_many({})
+    else:
+      self._collections[target].delete_many({})

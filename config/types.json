@@ -5,6 +5,5 @@
   {
     "typename": "ball",
     "parent": "gripper"
-  },
-  
+  }  
 ]

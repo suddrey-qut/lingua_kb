@@ -10,6 +10,7 @@ from _knowledge_base import MongoKB
 
 from lingua_kb.srv import Ask, AskResponse, Assert, State, StateResponse, Tell, Hierarchy, HierarchyResponse
 from lingua_kb.srv import Clear, Get, GetResponse, Insert, Remove
+from lingua_kb.srv import Load, Save
 
 class LinguaKB:
   def __init__(self, knowledge_base=None):
@@ -17,7 +18,7 @@ class LinguaKB:
 
     handler_file = rospy.get_param('~handlers', '')
     
-    with open(handler_file, 'U') as f:
+    with open(handler_file) as f:
       handlers = json.loads(f.read())
 
       for handler in handlers:
@@ -41,6 +42,10 @@ class LinguaKB:
     rospy.Service('/kb/handlers/clear', Clear, self.clear_handlers_cb)
     rospy.Service('/kb/handlers/insert', Insert, self.insert_handler_cb)
     rospy.Service('/kb/handlers/remove', Remove, self.remove_handler_cb)
+
+    rospy.Service('/kb/load', Load, self.load_cb)
+    rospy.Service('/kb/save', Save, self.save_cb)
+    rospy.Service('/kb/clear', Clear, self.clear_cb)
     
   def assert_cb(self, req):
     result = self.knowledge_base.ask(req.query)
@@ -51,6 +56,7 @@ class LinguaKB:
     return result
 
   def ask_cb(self, req):
+    print('req:', req.query)
     result = self.knowledge_base.ask(req.query)
 
     if isinstance(result, bool):
@@ -70,6 +76,16 @@ class LinguaKB:
     self.knowledge_base.tell(req.statement)
     return True
 
+  def clear_cb(self, req):
+    self.knowledge_base.clear(req.target)
+    return True
+
+  def load_cb(self, req):
+    return self.knowledge_base.load(req.collection, req.filename)
+
+  def save_cb(self, req):
+    return self.knowledge_base.save(req.collection, req.filename)
+  
   def hierarchy_cb(self, req):
     resp = HierarchyResponse()
     resp.parents = self.knowledge_base.get_parent_types(req.type_name)

@@ -1,0 +1,4 @@
+string collection
+string filename
+---
+bool success

@@ -58,7 +58,9 @@ add_service_files(
   Get.srv
   Hierarchy.srv
   Insert.srv
+  Load.srv
   Remove.srv
+  Save.srv
   State.srv
   Tell.srv
 )
