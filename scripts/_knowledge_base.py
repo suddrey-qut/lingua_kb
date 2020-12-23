@@ -81,23 +81,26 @@ class MongoKB:
   def tell(self, statement):
     if Parser.is_negative(statement):
         terms = Parser.logical_split(Parser.negate(statement))
-        if len(terms) == 2:
-            self.evaluate('(forget-concept-assertion {0} #!:{1} #!:{2})'.format(self.abox, terms[1], terms[0]))
-        else:
-            self.evaluate('(forget-role-assertion {0} #!:{1} #!:{2} #!:{3})'.format(self.abox, terms[2], terms[1], terms[0]))
+        self.objects.update({'object_id': terms[2]}, {'$pull': {
+          'attributes': {
+            'key': terms[0],
+            'value': terms[1],
+          }
+        }}, upsert=True)
     else:
         terms = Parser.logical_split(statement)
-        if len(terms) == 2:
-            self.evaluate('(add-concept-assertion {0} #!:{1} #!:{2})'.format(self.abox, terms[1], terms[0]))
-        else:
-            if self.evaluate('(feature? #!:{0})'.format(terms[0])) == 'T':
-                previous = self.ask('({0} ? {1})'.format(terms[0], terms[2]))
 
-                if previous:
-                    self.evaluate('(forget-role-assertion {0} #!:{1} #!:{2} #!:{3})'.format(self.abox, terms[2], previous[0], terms[0]))
-
-            self.evaluate('(add-role-assertion {0} #!:{1} #!:{2} #!:{3})'.format(self.abox, terms[2], terms[1], terms[0]))
-
+        self.objects.update({'object_id': terms[2]}, {'$pull': {
+          'attributes': { 'key': terms[0] }
+        }})
+        
+        self.objects.update({'object_id': terms[2]}, {'$push': {
+          'attributes': {
+            'key': terms[0],
+            'value': terms[1],
+          }
+        }}, upsert=True)
+        
   def inverse(self, role_name):
       inverse_name = self.process(self.evaluate('(role-inverse #!:{0})'.format(role_name)))
       if not len(inverse_name):
