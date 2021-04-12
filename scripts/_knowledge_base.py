@@ -87,6 +87,19 @@ class MongoKB:
             'value': terms[1],
           }
         }}, upsert=True)
+        self.objects.remove({'$or': [
+          { 
+            'attributes': { 
+              '$exists': True,
+              '$size': 0 
+            }
+          },
+          { 
+            'attributes': { 
+              '$exists': False,
+            }
+          },
+        ]})
     else:
         terms = Parser.logical_split(statement)
 
