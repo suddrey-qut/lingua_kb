@@ -43,9 +43,9 @@ class MongoKB:
       result = []
 
       handlers = list(filter(lambda pattern: re.match(pattern, statement), self._handlers))
-      
       if handlers:
         args = re.findall(handlers[0], statement)
+        print(args)
         return self._handlers[handlers[0]](args[0])
         
       if '?' in terms:

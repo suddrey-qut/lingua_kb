@@ -56,7 +56,6 @@ class LinguaKB:
     return result
 
   def ask_cb(self, req):
-    print('req:', req.query)
     result = self.knowledge_base.ask(req.query)
 
     if isinstance(result, bool):
