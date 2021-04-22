@@ -37,15 +37,18 @@ class MongoKB:
 
   def ask(self, statement):
       if Parser.is_negative(statement):
-          return not self.ask(Parser.negate(statement))
+        print('Negative:', statement)
+        print('Negated:', Parser.negate(statement))
+        return not self.ask(Parser.negate(statement))
 
       terms = Parser.logical_split(statement)
       result = []
 
+      print(statement)
+
       handlers = list(filter(lambda pattern: re.match(pattern, statement), self._handlers))
       if handlers:
         args = re.findall(handlers[0], statement)
-        print(args)
         return self._handlers[handlers[0]](args[0])
         
       if '?' in terms:
@@ -53,6 +56,7 @@ class MongoKB:
 
           if terms[1] == '?':
             query['object_id'] = terms[2] if terms[2][0] != '!' else { '$ne': terms[2][1:] }
+
             items = self.objects.find(query)
 
             for item in items:  
@@ -114,11 +118,22 @@ class MongoKB:
           }
         }}, upsert=True)
         
-  def inverse(self, role_name):
-      inverse_name = self.process(self.evaluate('(role-inverse #!:{0})'.format(role_name)))
-      if not len(inverse_name):
-          return None
-      return inverse_name[0]
+  def inverse(self, statement):
+      terms = Parser.logical_split(statement)
+
+      ids = [ terms[1] ] 
+
+      if Parser.is_iterable(ids[0]):
+        print(ids)
+        ids = Parser.logical_split(ids[0])[1:]
+        print(ids)
+
+      items = self.objects.find({'object_id': { '$nin': ids }})
+
+      result = []
+      for item in items:
+        result.append(item['object_id'])
+      return result
 
   def dump(self):
       facts = list()

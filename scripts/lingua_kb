@@ -27,6 +27,7 @@ class LinguaKB:
     self.knowledge_base.connect()
     
     rospy.Service('/kb/ask', Ask, self.ask_cb)
+    rospy.Service('/kb/inverse', Ask, self.inverse_cb)
     rospy.Service('/kb/assert', Assert, self.assert_cb)
     rospy.Service('/kb/state', State, self.state_cb)
     rospy.Service('/kb/tell', Tell, self.tell_cb)
@@ -57,6 +58,19 @@ class LinguaKB:
 
   def ask_cb(self, req):
     result = self.knowledge_base.ask(req.query)
+
+    if isinstance(result, bool):
+      raise rospy.ServiceException('Attempting to query an assertion')
+    
+    response = AskResponse(data=result)
+
+    if not isinstance(response.data, list):
+      response.data = [ response.data ]
+      
+    return response
+
+  def inverse_cb(self, req):
+    result = self.knowledge_base.inverse(req.query)
 
     if isinstance(result, bool):
       raise rospy.ServiceException('Attempting to query an assertion')
