@@ -182,8 +182,12 @@ class MongoKB:
 
     try:
       item = next(cursor)
+      
+      if not 'parents' in item:
+        return list()
+        
       for parent in item['parents']:
-        if parent['parent']:
+        if 'parent' in parent:
           result.append(parent['parent'])
     except StopIteration:
       pass    
